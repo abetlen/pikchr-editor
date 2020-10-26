@@ -12,17 +12,17 @@
           Pikchr Editor
         </div>
         <button class="text-blue-800 hover:text-blue-900" @click="download">
-          Download
+          Download SVG
         </button>
       </div>
       <textarea
-        class="w-full h-1/2 p-2 focus:outline-none overflow-auto whitespace-no-wrap"
+        class="w-full h-1/2 p-2 focus:outline-none overflow-auto whitespace-no-wrap font-mono"
         cols="30"
         rows="20"
         v-model="markup"
       ></textarea>
       <div
-        class="w-full h-1/2 p-2 border-t border-gray-500 overflow-auto"
+        class="w-full h-1/2 p-2 border-t border-gray-500 overflow-auto font-mono"
         style="min-height: 8rem"
       >
         <div class="text-green-700" v-if="error === ''">
@@ -78,10 +78,11 @@ export default {
       this.error = "";
     },
     download() {
+      const timestamp = Math.floor(Date.now() / 1000);
       const source = this.output;
       const url =
         "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
-      const filename = "pikchr.svg";
+      const filename = `pikchr-${timestamp}.svg`;
 
       var element = document.createElement("a");
       element.setAttribute("href", url);
