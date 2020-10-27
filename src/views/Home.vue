@@ -11,9 +11,14 @@
         <div>
           Pikchr Editor
         </div>
-        <button class="text-blue-800 hover:text-blue-900" @click="download">
-          Download SVG
-        </button>
+        <div>
+          <button class="text-blue-800 hover:text-blue-900 mr-4" @click="reset">
+            Reset
+          </button>
+          <button class="text-blue-800 hover:text-blue-900" @click="download">
+            Download SVG
+          </button>
+        </div>
       </div>
       <textarea
         class="w-full h-1/2 p-2 focus:outline-none overflow-auto whitespace-no-wrap font-mono"
@@ -43,12 +48,20 @@ import loadPikchr from "pikchr-js";
 
 const initialMarkup = `arrow; box "Hello" "World"; arrow`;
 
+function saveMarkup(markup) {
+  sessionStorage.setItem("markup", markup);
+}
+
+function loadMarkup() {
+  return sessionStorage.getItem("markup");
+}
+
 export default {
   name: "Home",
   data() {
     return {
       pikchr: null,
-      markup: initialMarkup,
+      markup: loadMarkup() || initialMarkup,
       output: "",
       error: ""
     };
@@ -65,6 +78,16 @@ export default {
     });
   },
   methods: {
+    reset() {
+      const confirmedReset = confirm(
+        "Do you want to reset the editor and clear the current figure?"
+      );
+      if (!confirmedReset) {
+        return;
+      }
+      this.markup = initialMarkup;
+      this.update();
+    },
     update() {
       if (!this.pikchr) {
         return;
@@ -74,6 +97,7 @@ export default {
         this.error = output;
         return;
       }
+      saveMarkup(this.markup);
       this.output = output;
       this.error = "";
     },
